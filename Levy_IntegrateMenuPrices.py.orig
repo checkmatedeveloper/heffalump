@@ -1,0 +1,83 @@
+import CSVUtils
+import IntegrationTools
+from db_connection import DbConnection
+from Levy_DB import Levy_Db
+import uuid
+
+def integrate(filePath, dbCore):
+    with open(filePath, 'rb') as csvFile:
+
+        # menu price row:
+        #  0:venue_entity_code, 1:item_number, 2:min_order, 3: max_order, 4:pos_level_id, 5:main_price, 6:pos_doe_level_id, 7:doe_price
+        reader = CSVUtils.parseCSVFile(csvFile)
+
+        for row in reader:
+            venue_uid = dbCore.getVenueUid(row[0])
+
+            levyMenuItems = dbCore.getLevyMenuItem(row[1])
+
+            if len(levyMenuItems) == 0:
+                continue #can't really do anything with this, its a random detached price, it has no item related to it
+            else:
+                levyMenuItem = levyMenuItems[0]
+                menuItem = dbCore.getMenuItem(levyMenuItem[2])
+                
+                min_order = row[2]
+                main_price = row[5]
+
+                if menuItem[10] != min_order:
+                    IntegrationTools.confirmUpdate(dbCore, venue_uid, 'menus', 'menu_items', 'minimum_qty', menuItem[0], menuItem[10], min_order)
+                if menuItem[9] != main_price:
+                    IntegrationTools.confirmUpdate(dbCore, venue_uid, 'menues', 'menu_items',  'price', menuItem[0], menuItem[9], main_price)
+                
+                
+            
+        
+
+            venues = dbCore.getAllLevyVenues()
+
+            for venue in venues:
+           
+                PREORDER_MENU_TYPES = [2] #these menus should use the preorder "main price" while everthing else should use the doe_price
+                FULL_MENU_TYPES = [1, 2] #these menus should contain all items
+
+                menues = dbCore.getMenus(venue[0])
+            
+                for menu in menues:
+                    menu_item = dbCore.getMenuXMenuItem(menu[0], levyMenuItems[0][0])
+                    
+                    if menu_item is None:
+                        if menu[1] in FULL_MENU_TYPES: #menu[1] is the menu_type_uid
+                            insert_uuid = uuid.uuid4()
+                            IntegrationTools.confirmInsert(dbCore, venue[0], insert_uuid, 'menus', 'menu_x_menu_items', 'menu_uid', menu[0], False)
+                            IntegrationTools.confirmInsert(dbCore, venue[0], insert_uuid, 'menus', 'menu_x_menu_items', 'menu_category_uid', menu[1], False)
+                            IntegrationTools.confirmInsert(dbCore, venue[0], insert_uuid, 'menus', 'menu_x_menu_items', 'menu_item_uid', menuItem[2], False)
+                            
+                            if menuType in PREORDER_MENU_TYPES:
+                                insertPrice = row[7]
+                            else:
+                                insertPrice = row[5]
+            
+                            IntegrationTools.confirmInsert(dbCore, venue[0], insert_uuid, 'menus', 'menu_x_menu_items', 'price', insertPrice, False)
+                            
+                    else:
+                        #check to make sure that the prices are up to date
+                        price = menu_item[5]
+                        menuType = menu_item[13]
+
+                        if menuType in PREORDER_MENU_TYPES:
+                            updatePrice = row[7]
+                        else:
+                            updatePrice = row[5]
+                    
+                        if price != updatePrice:
+                            print " I updated the price!!!"
+                            IntegrationTools.confirmUpdate(dbCore, venue_uid, 'menus', 'menu_x_menu_items', 'price',  menu_item[0], price, updatePrice)
+
+                            
+                     
+                
+
+            
+                
+            
