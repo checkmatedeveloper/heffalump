@@ -1,0 +1,10 @@
+
+[
+ {"patron_uid":43723, "unit_names":["A"]},
+ {"patron_uid":43724, "unit_names":["B"]},
+ {"patron_uid":43725, "unit_names":["B"]},
+ {"patron_uid":43726, "unit_names":["C"]},
+ {"patron_uid":43727, "unit_names":["D"]},
+ {"patron_uid":43728, "unit_names":["E"]},
+ {"patron_uid":43729, "unit_names":["F"]}
+]

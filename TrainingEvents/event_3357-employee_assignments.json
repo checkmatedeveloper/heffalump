@@ -1,0 +1,11 @@
+[
+    {"employee_uid":1401,
+     "unit_names":["B1"]
+    },
+    {"employee_uid":1402,
+     "unit_names":["B2"]
+    },
+    {"employee_uid":1403,
+     "unit_names":["B3"]
+    }
+]

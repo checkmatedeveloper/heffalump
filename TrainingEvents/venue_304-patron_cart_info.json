@@ -1,0 +1,51 @@
+[
+  {
+    "patron_uid":84803,
+    "carts":[
+      {"cart_type_uid":1, "should_stop":"yes", "pay_method":"unknown", "is_pay_auth_required":0},
+      {"cart_type_uid":2, "should_stop":"yes", "pay_method":"unknown", "is_pay_auth_required":0}
+    ]
+  },
+  {
+    "patron_uid":84804,
+    "carts":[
+      {"cart_type_uid":1, "should_stop":"yes", "pay_method":"direct_bill", "is_pay_auth_required":0},
+      {"cart_type_uid":2, "should_stop":"yes", "pay_method":"direct_bill", "is_pay_auth_required":0}
+    ]
+  },
+  {
+    "patron_uid":84805,
+    "carts":[
+      {"cart_type_uid":1, "should_stop":"on_request", "pay_method":"cc_on_file", "is_pay_auth_required":0},
+      {"cart_type_uid":2, "should_stop":"on_request", "pay_method":"cc_on_file", "is_pay_auth_required":0}
+    ]
+  },
+  {
+    "patron_uid":84806,
+    "carts":[
+      {"cart_type_uid":1, "should_stop":"on_request", "pay_method":"cc_present", "is_pay_auth_required":0},
+      {"cart_type_uid":2, "should_stop":"on_request", "pay_method":"cc_present", "is_pay_auth_required":0}
+    ]
+  },
+  {
+    "patron_uid":84807,
+    "carts":[
+      {"cart_type_uid":1, "should_stop":"no", "pay_method":"preorder_card", "is_pay_auth_required":0},
+      {"cart_type_uid":2, "should_stop":"no", "pay_method":"preorder_card", "is_pay_auth_required":0}
+    ]
+  },
+  {
+    "patron_uid":84808,
+    "carts":[
+      {"cart_type_uid":1, "should_stop":"no", "pay_method":"cc_present", "is_pay_auth_required":0},
+      {"cart_type_uid":2, "should_stop":"no", "pay_method":"cc_present", "is_pay_auth_required":0}
+    ]
+  },
+  {
+    "patron_uid":84809,
+    "carts":[
+      {"cart_type_uid":1, "should_stop":"no", "pay_method":"cc_present", "is_pay_auth_required":0},
+      {"cart_type_uid":2, "should_stop":"no", "pay_method":"cc_present", "is_pay_auth_required":0}
+    ]
+  }
+]
