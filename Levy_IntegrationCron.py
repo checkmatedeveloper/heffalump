@@ -95,6 +95,7 @@ if skipTempFiles == False:
         HipChat.sendMessage("There were  errors when inserting into temp levy tables. Use \n SELECT * FROM integrations.integration_actions WHERE id in (" + ','.join(str(x) for x in sqlErrorRows) + ")\n for more info", "IntCron", INTEGRATION_HIPCHAT_ROOM, "yellow")
 
 
+
 #clear out any 
 dbCore.purgePurgatory()
  

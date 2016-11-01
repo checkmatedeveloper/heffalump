@@ -1843,3 +1843,54 @@ class Levy_Db:
     ''')
     
         self.db.commit()
+
+    
+
+    def batchInsertTempTableRows(self, tableName, columns, rows):
+        
+        localColumns = columns
+ 
+        #build the query string
+        query = "INSERT IGNORE INTO integrations." + tableName + "("
+
+        query = query + ",".join(x for x in columns)
+
+        query = query + ") VALUES "
+        valuesString = "(" + ",".join("%s" for _ in columns[:-1]) + ",NOW())"
+        query = query + ",".join(valuesString for _ in rows)
+        
+        flattenedRows = [item for sublist in rows for item in sublist]
+
+        try:
+            cursor = self.db.cursor()
+            rowCount =  cursor.execute(query, tuple(flattenedRows))
+        except mysql.connector.Error as err:
+            print("Something went wrong: {}".format(err))
+    
+        failedRows = []
+        if rowCount < len(rows):
+            failedRows = self.getFailedRows(tableName, columns, rows)
+            print "FAILED ROWS: " + str(failedRows)        
+
+        self.db.commit()
+        
+        if len(failedRows) == 0:
+            return None
+        else:
+            return failedRows
+
+    def getFailedRows(self, tableName, columns, rows):
+
+        failedRows = []
+
+        query = "SELECT * FROM integrations." + tableName + " WHERE "
+        query = query + " AND ".join(column + "=%s " for column  in columns[:-1])
+
+        cursor = self.db.cursor()
+        for row in rows:
+            rowCount = cursor.execute(query, row)
+            if rowCount == 0: 
+                failedRows.append(row)
+
+        return failedRows
+
