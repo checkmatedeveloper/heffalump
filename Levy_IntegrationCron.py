@@ -224,7 +224,7 @@ for venue in venues:
             emailBody = emailBody + str(errorCount) + " errors</p>"
 
 
-os.system("python /home/ec2-user/rabbitmq_workers/repo/Levy_PurgatoryMonitorCron.py")
+os.system("/usr/bin/python2.6 /home/ec2-user/crons/repo/Levy_PurgatoryMonitorCron.py")
 
 print "All Venues Count: " + str(allVenuesCount)
 
