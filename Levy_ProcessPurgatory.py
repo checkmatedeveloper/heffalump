@@ -28,6 +28,9 @@ class LevyIntegrationWorker():
     imageCount = 0
     imageFailCount = 0
 
+    removeCount = 0
+    removeFailCount = 0
+
     db = None
 
     def __init__(self, levyDB):
@@ -83,7 +86,19 @@ class LevyIntegrationWorker():
             pointerField = action[0][5]
             uid = action[0][6]
 
-            self.levyDB.removeRow(pointerSchema, pointerTable, pointerField, uid)
+            success, errorMessage = self.levyDB.removeRow(pointerSchema, pointerTable, pointerField, uid)
+
+            if success:
+                self.removeCount += 1
+                self.levyDB.purgatoryRowApplied(action[0][0])
+                return True
+            else:
+                print errorMessage
+                self.removeFailCount += 1
+                self.levyDB.purgatoryRowFailed(action[0][0], errorMessage)
+                handleError(errorMessage)
+                return False
+
 
         if requiredAction == 'image':
             imageAction = action[0] # there should only ever be one row
@@ -128,8 +143,19 @@ class LevyIntegrationWorker():
         if requiredAction == 'edit' or requiredAction == 'deactivate' or requiredAction == 'reactivate':
         
             success, errorMessage = self.levyDB.updateRow(action[0][3], action[0][4], action[0][5], action[0][6], action[0][8])
-            
+           
+
+ 
             if success:
+
+                
+                if required_action == 'reactivate' and action[0][3] == 'menus' and action[0][4] == 'menu_items':
+                    itemClassification = levyDB.getItemClassificationFromMenuItemUid(action[0][1], action[0][6])
+                    BEVERAGE_ITEM_CLASSIFICATIONS = ["BEV-HOT BEVERAGES", "BAR MIXERS", "LIQUOR-MISC.", "BEV-JUICE", "BEV-SOFT DRINKS", "BEER-IMPORTED", "BEER-DOMESTIC", "LIQUOR-VODKA", "LIQUOR-SCOTCH", "BEV-WATER", "BEVERAGE PACKAGES", "WINE-RED", "WINE-WHITE", "WINE-SPARKLING", "LIQUOR-WHISKEY", "LIQUOR-TEQUILA", "LIQUOR-RUM", "LIQUOR-GIN", "FOOD PACKAGE"]
+                    if itemClassification in BEVERAGE_ITEM_CLASSIFICATIONS:
+                        self.levyDB.insertParMenuItem(venueUid, menuUid, message)
+
+
                 self.updateCount += 1
                 self.levyDB.purgatoryRowApplied(action[0][0])
                 return True
@@ -284,12 +310,14 @@ class LevyIntegrationWorker():
                             if itemClassification in BEVERAGE_ITEM_CLASSIFICATIONS:
                                 self.levyDB.insertParMenuItem(venueUid, menuUid, message)
                                 
-    
+ 
                     #insert into menu_item_x_option_groups
 
                     defaultOptionGroups = self.levyDB.getDefaultOptionGroups(action[0][1])
                     for option in defaultOptionGroups:
                         self.levyDB.setOptionGroup(message, option[0])
+                
+                    
 
                 #repoint the encryption row from purgatory to the newly inserted row 
                 for fieldRow in action:

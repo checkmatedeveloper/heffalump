@@ -687,6 +687,7 @@ class Levy_Db:
             rowsAffected = cursor.execute(query)
             self.db.commit()
             self.addLogRow("Delete: SUCCESS")
+            return True, None
         except self.db.error as e:
             self.db.rollback()
             self.addLogRow("Delete: FAILURE")
@@ -1894,3 +1895,13 @@ class Levy_Db:
 
         return failedRows
 
+    def getItemClassificationFromMenuItemUid(self, venueUid, menuItemUid):
+        cursor = self.db.cursor()
+        cursor.execute('''
+                        SELECT item_classification 
+                        FROM integrations.menu_items_levy
+                        JOIN integrations.levy_temp_menu_items on menu_items_levy.levy_item_number = levy_temp_menu_items.item_number
+                        WHERE venue_uid = %s AND menu_item_uid = %s
+                       ''', (venueUid, menuItemUid))
+
+        return cursor.fetchall()[0][0]
