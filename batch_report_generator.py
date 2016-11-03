@@ -12,7 +12,6 @@
 import datetime
 from dateutil.parser import parse
 import time
-import smtplib
 import requests
 import os
 from db_connection import DbConnection
@@ -100,14 +99,17 @@ class handleBatch:
 
     """
     def createBatchReport( self, batch ):
+
         # Get batch data
         data = self.reports_core.getBatchData( batch ) 
         if data == False:
+            self.setBatchStatus( batch_uid, 'fail' );  
             return False
         # Create excel document
         yesterday = datetime.date.today() - datetime.timedelta(days=1)
         date = str(yesterday).replace (" ", "_")
-        
+
+        batch_uid = batch['batch_uid'] if 'batch_uid' in batch else None        
         data['batch_name'] = batch['batch_name'] if 'batch_name' in batch else 'Batch' 
         batch_name = batch['batch_name'].replace (" ", "_") if 'batch_name' in batch else 'Batch'
         root = '/tmp/'
@@ -115,6 +117,7 @@ class handleBatch:
         try:
             open( filename, 'w+' );
         except IOError:
+            self.setBatchStatus( batch_uid, 'fail' );  
             return False
         
         workbook = self.createExcelDocument(filename)
@@ -127,17 +130,20 @@ class handleBatch:
         write_title_page = self.writeTitlePage( titlePage, data )
         if write_title_page == False:
             os.remove( filename )
+            self.setBatchStatus( batch_uid, 'fail' );  
             return False
         # Handle Batch Reports
         data['date'] = date
         reports_written = self.handleReportPages( workbook, data )  
         if reports_written == False:
+            self.setBatchStatus( batch_uid, 'fail' );  
             os.remove( filename )
             return False
         # Close Excel Doc
         try:
             workbook.close()
         except IOError:
+            self.setBatchStatus( batch_uid, 'fail' );  
             return False
 
         # Send Batch Report
@@ -188,8 +194,18 @@ class handleBatch:
                             }
                 )
 
+        
+        # Update batch row, success or fail
+        status = "success" if r.status_code == 200 else "fail";
+        self.setBatchStatus( batch_uid, status ); 
+
         # When done, get rid of the excel doc
         os.remove( filename )
+
+
+    def setBatchStatus( self, batchUid, status ):
+
+        return self.reports_core.updateBatchSendStatus( batchUid, status );
 
 
     '''
