@@ -700,6 +700,19 @@ class ReportsDb:
         return data
 
 
+    def updateBatchSendStatus( self, batchUid, status ):
+        
+        if batchUid == None or status == None:
+            return False
+
+        self.dbc.execute("UPDATE reports.batch SET last_sent_status = \'{0}\'  WHERE id = {1}".format( str( status ), batchUid ) );
+        self.db.commit()
+
+        return True
+
+
+
+
 if __name__ == "__main__":
 
 
@@ -707,6 +720,9 @@ if __name__ == "__main__":
     from db_connection import DbConnection
     db = DbConnection().connection
     reportsDb = ReportsDb(db)
+
+    reportsDb.updateBatchSendStatus( 33, 'fail');
+
     '''
     data = reportsDb.getBatchReportsInfo(21)
 
@@ -724,10 +740,10 @@ if __name__ == "__main__":
     #print "data = "
     pprint.pprint(data)
     '''
-    data = reportsDb.getEventLockBatches(202)
+    #data = reportsDb.getEventLockBatches(202)
 
     #print "data = "
-    pprint.pprint(data)
+    #pprint.pprint(data)
 
 
 
