@@ -229,6 +229,11 @@ def integrate(dbCore):
             menuItemLevyUid = dbCore.getMenuItemLevyUid(venue_uid, menuItemUid)
             IntegrationTools.confirmDeactivate(dbCore, venue_uid, 'integrations', 'menu_items_levy', menuItemLevyUid)
 
+            #also remove the par items
+            IntegrationTools.confirmRemove(dbCore, venue_uid, 'info', 'par_menu_items', 'menu_x_menu_item_uid', mxmUid)
+
+            IntegrationTools.confirmRemove(dbCore, venue_uid, 'info', 'unit_patron_par_items', 'menu_x_menu_item_uid', mxmUid)
+
     return success, errorLogRows, errorVenues;
 
 
