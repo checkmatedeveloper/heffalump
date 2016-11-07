@@ -52,7 +52,6 @@ class OMSDirectOrderTransferDB:
                         WHERE event_uid = %s",
                         (event_uid))
         return cursor.fetchone()[0]
-
     def getColumnNames(self, description):
         return [ i[0] for i in description ]
 
@@ -498,12 +497,6 @@ LEFT JOIN integrations.patrons_levy ON patrons_levy.patron_uid = venue_points_se
                             venues.name, \
                             first_name, \
                             last_name, \
-                            (SELECT SUM(subtotal) + SUM(tip) + SUM(tax) - SUM(discount) \
-                                FROM orders.orders \
-                                JOIN orders.order_payments ON orders.id = order_payments.order_uid \
-                                JOIN orders.order_payments_x_revenue_centers ON order_payments.id = order_payments_x_revenue_centers.order_payment_uid \
-                                JOIN integrations.levy_transfered_orders ON levy_transfered_orders.order_uid = orders.id \
-                                WHERE orders.event_uid = %s AND transfer_successful = 1) AS total, \
                             (SELECT count(*) \
                              FROM integrations.levy_transfered_orders \
                              JOIN orders.orders on orders.id = levy_transfered_orders.order_uid \
@@ -514,8 +507,13 @@ LEFT JOIN integrations.patrons_levy ON patrons_levy.patron_uid = venue_points_se
                             JOIN integrations.events_levy ON events_levy.event_uid = events.id \
                             JOIN setup.event_controls ON events.id = event_controls.event_uid \
                             JOIN setup.employees ON employees.id = event_controls.locking_employee_uid \
-                            WHERE events.id = %s", (event_uid, event_uid, event_uid))
+                            WHERE events.id = %s", (event_uid, event_uid))
         return cursor.fetchone() #there should only ever be one row
+
+    def getTransferedOrderTotal(self, eventUid, timezone, venueUid):
+        cursor = self.db.cursor()
+        result_args = cursor.callproc('reports.sa_get_sales_summary_report', [(eventUid), timezone, venueUid, 0])
+        return cursor.fetchall()[0][3]
 
     def getFailedTransferOrders(self, event_uid):
         cursor = self.db.cursor()
