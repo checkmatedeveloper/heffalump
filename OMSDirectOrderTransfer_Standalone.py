@@ -141,6 +141,7 @@ try:
     for venueUid in venueUids:
         print str(venueUid)
         closedEvents = dbCore.getClosedEvents(venueUid)
+        print str(closedEvents)
         for event in closedEvents:
             eventUid = event[0]
             if dbCore.TPGDisabled(eventUid):
