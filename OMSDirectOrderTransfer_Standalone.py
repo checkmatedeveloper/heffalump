@@ -27,9 +27,14 @@ def sendSuccessfulTransferEmail(eventUid, venueUid, dbCore):
 
     recipientList = dbCore.getOrderTransferEmailRecipientList(venueUid)
 
-    eventName, eventDateUTC, levyEventId, localTimeZone, venueName, employeeFirstName, employeeLastName, total, orderCount = dbCore.getTransferedOrderData(eventUid)
+    eventName, eventDateUTC, levyEventId, localTimeZone, venueName, employeeFirstName, employeeLastName, orderCount = dbCore.getTransferedOrderData(eventUid)
+
+    total = dbCore.getTransferedOrderTotal(eventUid, localTimeZone, venueUid)
+
+    print "Total: " + str(total)
 
     localEventDate = convertUTCToLocalTime(eventDateUTC, localTimeZone)
+
     subject = "Event: " + eventName + " successfully transferred"
 
     currentTimeUTC = datetime.datetime.now()
@@ -50,7 +55,7 @@ def sendSuccessfulTransferEmail(eventUid, venueUid, dbCore):
     if total is None:
         total = 0
 
-    emailBody += "<p>Event: " + eventName + " - " + localEventDate.strftime("%b %-d, %Y @ %-I:%M %p") + " </p><p>Venue: " + venueName + "</p><p>Closed By: " + employeeFirstName + " " + employeeLastName + "</p><p>Transfer Time: " + currentTime.strftime("%b %-d, %Y @ %-I:%M %p") + " </p><p>Orders: " + str(orderCount) + "</p><p>Sales: " + locale.currency(total, grouping=True) + " </p>"
+    emailBody += "<p>Event: " + eventName + " - " + localEventDate.strftime("%b %-d, %Y @ %-I:%M %p") + " </p><p>Venue: " + venueName + "</p><p>Closed By: " + employeeFirstName + " " + employeeLastName + "</p><p>Transfer Time: " + currentTime.strftime("%b %-d, %Y @ %-I:%M %p") + " </p><p>Orders: " + str(orderCount) + "</p><p>Gross Total: " + locale.currency(total, grouping=True) + " </p>"
 
 
     if len(failedOrders) > 0:
@@ -86,6 +91,8 @@ try:
 
     conn = DbConnection().connection
     dbCore = OMSDirectOrderTransferDB(conn)
+
+
 
     venueUidResults = dbCore.getVenueUids()
     venueUids = []

@@ -198,6 +198,11 @@ for venue in venues:
     if venue_uid == 309:
         continue
     
+    venueRowCount = dbCore.countAllVenuePurgatoryRows(venue_uid)
+
+    if venueRowCount < 1:
+        continue
+ 
     emailBody = emailBody + "<h3>Venue " + str(venue_uid) + "</h3>"
     for info in summaryInfo:
         
