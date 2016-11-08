@@ -1905,3 +1905,11 @@ class Levy_Db:
                        ''', (venueUid, menuItemUid))
 
         return cursor.fetchall()[0][0]
+
+    def countAllVenuePurgatoryRows(self, venueUid):
+        cursor = self.db.cursor()
+        cursor.execute('''
+                        SELECT count(*) FROM integrations.purgatory
+                        WHERE venue_uid = %s
+                       ''', (venueUid))
+        return cursor.fetchall()[0][0]
