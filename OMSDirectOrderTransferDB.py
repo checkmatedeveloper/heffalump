@@ -435,7 +435,7 @@ tip,
                             LEFT JOIN (
                             SELECT patrons_levy.customer_number, patrons_levy.patron_uid, patrons_x_units_levy.unit_uid 
                             FROM integrations.patrons_levy
-                            JOIN integrations.patrons_x_units_levy ON patrons_x_units_levy.patrons_levy_uid = patrons_levy.id
+                            JOIN integrations.patrons_x_units_levy ON patrons_x_units_levy.patrons_levy_uid = patrons_levy.id AND order_payment_preauths.is_complete = 1
                             ) AS patrons ON patrons.patron_uid = order_payments.patron_uid AND patrons.unit_uid = orders.unit_uid
                             LEFT JOIN orders.order_payment_preauths ON order_payment_preauths.order_uid = order_payments.order_uid AND order_payment_preauths.payment_id = order_payments.payment_id
                             LEFT JOIN patrons.clone_patron_cards ON clone_patron_cards.id = order_payment_preauths.patron_card_uid
