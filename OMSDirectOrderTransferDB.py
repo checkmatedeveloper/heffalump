@@ -437,7 +437,7 @@ tip,
                             FROM integrations.patrons_levy
                             JOIN integrations.patrons_x_units_levy ON patrons_x_units_levy.patrons_levy_uid = patrons_levy.id
                             ) AS patrons ON patrons.patron_uid = order_payments.patron_uid AND patrons.unit_uid = orders.unit_uid
-                            LEFT JOIN orders.order_payment_preauths ON order_payment_preauths.order_uid = order_payments.order_uid AND order_payment_preauths.payment_id = order_payments.payment_id
+                            LEFT JOIN orders.order_payment_preauths ON order_payment_preauths.order_uid = order_payments.order_uid AND order_payment_preauths.payment_id = order_payments.payment_id AND order_payment_preauths.is_complete = 1
                             LEFT JOIN patrons.clone_patron_cards ON clone_patron_cards.id = order_payment_preauths.patron_card_uid
 JOIN setup.events ON events.id = orders.event_uid
 LEFT JOIN setup.venue_points_settings ON venue_points_settings.venue_uid = events.venue_uid
