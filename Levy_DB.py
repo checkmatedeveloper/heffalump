@@ -1351,7 +1351,25 @@ class Levy_Db:
                         AND required_action = "deactivate" 
                         AND action = "pending"''', (pointer_table, venue_uid))
         return cursor.rowcount 
-    
+   
+    def countReactivatePurgatoryRows(self, venue_uid, pointer_table):
+        cursor = self.db.cursor()
+        cursor.execute('''SELECT * FROM integrations.purgatory
+                          WHERE pointer_table = %s
+                          AND venue_uid = %s
+                          AND required_action = "reactivate"
+                          AND action = "pending"''', (pointer_table, venue_uid))
+        return cursor.rowcount
+
+    def countRemovePurgatoryRows(self, venue_uid, pointer_table):
+        cursor = self.db.cursor()
+        cursor.execute('''SELECT * FROM integrations.purgatory
+                          WHERE pointer_table = %s
+                          AND venue_uid = %s
+                          AND required_action = "remove"
+                          AND action = "pending"''', (pointer_table, venue_uid))
+        return cursor.rowcount
+
     def getVenuesXSuiteHolders(self, venue_uid, patron_uid):
         cursor = self.db.cursor()
         cursor.execute("SELECT * FROM patrons.venues_x_suite_holders \
