@@ -1910,6 +1910,8 @@ class Levy_Db:
         cursor = self.db.cursor()
         cursor.execute('''
                         SELECT count(*) FROM integrations.purgatory
-                        WHERE venue_uid = %s
+                        WHERE required_action IN ('add', 'edit', 'deactivated')
+                        AND action = 'pending'
+                        AND venue_uid = %s
                        ''', (venueUid))
         return cursor.fetchall()[0][0]
