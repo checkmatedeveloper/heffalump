@@ -178,7 +178,8 @@ summaryInfo = [
                 {'data':'Venues X Suite Holders', 'pointer_table':'venues_x_suite_holders', 'errors':None},
                 {'data':'Events X Venues', 'pointer_table':'events_x_venues', 'errors':None},
                 {'data':'Taxes', 'pointer_table':'menu_taxes', 'errors':taxRatesErrorRows},
-                {'data':'Packages', 'pointer_table':'menu_packages_x_items', 'errors':packageErrorRows}
+                {'data':'Packages', 'pointer_table':'menu_packages_x_items', 'errors':packageErrorRows},
+                {'data':'Pars', 'pointer_table':'par_menu_items', 'errors':None}
               ]
 
 recipients = ['nate@parametricdining.com', 'jonathan@parametricdining.com']
@@ -211,7 +212,10 @@ for venue in venues:
         addRows = dbCore.countAddPurgatoryRows(venue_uid, info['pointer_table'])
         editRows = dbCore.countEditPurgatoryRows(venue_uid, info['pointer_table'])
         deactivateRows = dbCore.countDeactivatePurgatoryRows(venue_uid, info['pointer_table'])
-        totalCount = addRows + editRows + deactivateRows
+        reactivateRows = dbCore.countReactivatePurgatoryRows(venue_uid, info['pointer_table'])
+        removeRows = dbCore.countRemovePurgatoryRows(venue_uid, info['pointer_table'])
+
+        totalCount = addRows + editRows + deactivateRows + reactivateRows + removeRows
         if info['errors'] is not None:
             totalCount += info['errors'].count(venue_uid)
 
@@ -225,6 +229,8 @@ for venue in venues:
         emailBody = emailBody + str(dbCore.countAddPurgatoryRows(venue_uid, info['pointer_table'])) + " new, "
         emailBody = emailBody + str(dbCore.countEditPurgatoryRows(venue_uid, info['pointer_table'])) + " updated,"
         emailBody = emailBody + str(dbCore.countDeactivatePurgatoryRows(venue_uid, info['pointer_table'])) + " deactivated, "
+        emailBody = emailBody + str(dbCore.countReactivatePurgatoryRows(venue_uid, info['pointer_table'])) + " reactivated, "
+        emailBody = emailBody + str(dbCore.countRemovePurgatoryRows(venue_uid, info['pointer_table'])) + " removed, "
         if info['errors'] is not None:
             errorCount = info['errors'].count(venue_uid)
             emailBody = emailBody + str(errorCount) + " errors</p>"
