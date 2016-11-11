@@ -182,7 +182,7 @@ try:
                 #PALAC special transfer
                 if venueUid == 315:
                     try:
-                        now = datetime.datetime.now()
+                        eventDate = dbCore.getEventDate()
                         datestamp = now.strftime('%Y%m%d')
 
                         palacUsersHeader, palacUsers = dbCore.getPALACUsers()

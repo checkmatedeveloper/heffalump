@@ -668,3 +668,9 @@ LEFT JOIN integrations.patrons_levy ON patrons_levy.patron_uid = venue_points_se
                        ''')
         return self.getColumnNames(cursor.description), cursor.fetchall()
 
+    def getEventDate(self, eventUid):
+        cursor = self.db.cursor()
+        cursor.execute('''
+                        SELECT event_date FROM setup.events WHERE id = %s
+                       ''', (eventUid))
+        return cursor.fetchall()[0][0]
