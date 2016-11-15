@@ -671,6 +671,10 @@ LEFT JOIN integrations.patrons_levy ON patrons_levy.patron_uid = venue_points_se
     def getEventDate(self, eventUid):
         cursor = self.db.cursor()
         cursor.execute('''
-                        SELECT event_date FROM setup.events WHERE id = %s
-                       ''', (eventUid))
+                        SELECT CONVERT_TZ((SELECT event_date FROM setup.events WHERE id = %s), 
+                  'GMT',
+                  (SELECT local_timezone_long FROM setup.events
+                    JOIN setup.venues ON events.venue_uid = venues.id
+                    WHERE events.id = %s))
+                       ''', (eventUid, eventUid))
         return cursor.fetchall()[0][0]
