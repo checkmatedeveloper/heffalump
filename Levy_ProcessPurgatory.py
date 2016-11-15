@@ -149,7 +149,7 @@ class LevyIntegrationWorker():
             if success:
 
                 
-                if required_action == 'reactivate' and action[0][3] == 'menus' and action[0][4] == 'menu_items':
+                if requiredAction == 'reactivate' and action[0][3] == 'menus' and action[0][4] == 'menu_items':
                     itemClassification = levyDB.getItemClassificationFromMenuItemUid(action[0][1], action[0][6])
                     BEVERAGE_ITEM_CLASSIFICATIONS = ["BEV-HOT BEVERAGES", "BAR MIXERS", "LIQUOR-MISC.", "BEV-JUICE", "BEV-SOFT DRINKS", "BEER-IMPORTED", "BEER-DOMESTIC", "LIQUOR-VODKA", "LIQUOR-SCOTCH", "BEV-WATER", "BEVERAGE PACKAGES", "WINE-RED", "WINE-WHITE", "WINE-SPARKLING", "LIQUOR-WHISKEY", "LIQUOR-TEQUILA", "LIQUOR-RUM", "LIQUOR-GIN", "FOOD PACKAGE"]
                     if itemClassification in BEVERAGE_ITEM_CLASSIFICATIONS:
@@ -413,7 +413,8 @@ class LevyIntegrationWorker():
             sys.exit() 
         actions = self.consolidatePurgatoryRows(applyActionRows)
      
-       
+      
+        print str(actions) 
 
 #############TESTING EMAILER                
         #print "ACTIONS: " + str(actions)

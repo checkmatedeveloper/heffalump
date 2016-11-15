@@ -7,7 +7,7 @@ import uuid
 
 class TrainingEventDB:
 
-    BASE_PATH = "/home/ec2-user/rabbitmq_workers/repo/"
+    BASE_PATH = "/home/ec2-user/crons/repo/"
 
     def __init__(self, db):
         self.db = db
@@ -592,14 +592,19 @@ class TrainingEventDB:
   
                 print str(unitUid) + " " + str(eventUid) + " " + str(patronUid)
 
-                cursor.execute("INSERT INTO `preorders`.`preorders`( \
+                try:
+        
+                    cursor.execute("INSERT INTO `preorders`.`preorders`( \
                                     `event_info_uid`, \
                                     `created_at`) \
                                 VALUES( \
                                     (SELECT id FROM info.event_info WHERE unit_uid = %s AND event_uid = %s AND patron_uid = %s), \
                                     NOW())", (unitUid, eventUid, patronUid))
 
-                preorderUid = cursor.lastrowid
+                    preorderUid = cursor.lastrowid
+
+                except:
+                    continue
 
                 revenueCenter = preorderJSON['revenue_centers'][0]
 

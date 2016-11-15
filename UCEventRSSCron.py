@@ -202,4 +202,4 @@ else:
     for issue in issues:
         emailMessage += issue
 
-gmail.sendGmail("tech@parametricdining.com", "fkTUfbmv2YVy", "uc_rss_integration@parametricdining.com", "nate@checkmatetablet.com", "UC RSS integration summary", emailMessage, "html")
+gmail.sendGmail("tech@parametricdining.com", "fkTUfbmv2YVy", "uc_rss_integration@parametricdining.com", "nate@checkmatetablet.com", "UC RSS integration summary", emailMessage.encode('utf-8').strip(), "html")

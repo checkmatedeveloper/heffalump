@@ -83,7 +83,7 @@ merchantUid = dbCore.createTrainingMerchantXVenues(venueUid)
 
 
 #6. Create Configuration files
-FILE_PATH = "/home/ec2-user/rabbitmq_workers/repo/TrainingEvents/"
+FILE_PATH = "/home/ec2-user/crons/repo/TrainingEvents/"
 
 
 #   per venue
