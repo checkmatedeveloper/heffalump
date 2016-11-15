@@ -11,7 +11,7 @@ from pytz import timezone
 import datetime
 import locale
 import gmail
-
+import MailGun
 
 EXPORT_FILE_PATH = "/data/integration_files/OMS_DIRECT_EXPORTS/"
 
@@ -73,8 +73,8 @@ def sendSuccessfulTransferEmail(eventUid, venueUid, dbCore):
 
     for to in recipientList:
         print "Sending Transfer Email to " + str(to[0])
-        gmail.sendGmail("tech@parametricdining.com", "fkTUfbmv2YVy", "OrderTransfer@parametricdining.com", str(to[0]), subject, emailBody, "You need to enable HTML to view this message")
-
+        #gmail.sendGmail("tech@parametricdining.com", "fkTUfbmv2YVy", "OrderTransfer@parametricdining.com", str(to[0]), subject, emailBody, "You need to enable HTML to view this message")
+        MailGun.sendEmail('mail@bypassmobile.com', str(to[0]), subject, emailBody)
 
 
 def makeCSVFile(fileName, header, data):

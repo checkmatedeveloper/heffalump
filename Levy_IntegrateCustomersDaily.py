@@ -7,6 +7,7 @@ import sys
 import traceback
 import os
 import gmail
+import MailGun
 from IntegrationEmailerDb import EmailerDb
 
 try:
@@ -69,12 +70,13 @@ try:
                     emailerDb = EmailerDb(conn)
                     emailAddresses = emailerDb.getEmailAddresses(venueUid)
                     for address in emailAddresses:
-                        gmail.sendGmail("tech@parametricdining.com", 
-                                        "fkTUfbmv2YVy", 
-                                        "integration@parametricdining.com", 
-                                        address[0], 
-                                        'Instant Patron Integration Applied', 
-                                        "Instant Patron Integration has completed.  The following changes have been applied: </br>" + successBody,  'please open this in an HTML compatable email client')
+                        #gmail.sendGmail("tech@parametricdining.com", 
+                        #                "fkTUfbmv2YVy", 
+                        #                "integration@parametricdining.com", 
+                        #                address[0], 
+                        #                'Instant Patron Integration Applied', 
+                        #                "Instant Patron Integration has completed.  The following changes have been applied: </br>" + successBody,  'please open this in an HTML compatable email client')
+    `                   MailGun.sendEmail("mail@bypassmobile.com", address[0], 'Instant Patron Integration Applied', "Instant Patron Integration has completed.  The following changes have been applied: </br>" + successBody)
                     else:
                         print "Email body too short to send"
 
@@ -84,10 +86,11 @@ try:
 
 except:
      tb = traceback.format_exc()
-     gmail.sendGmail("tech@parametricdining.com", 
-                     "fkTUfbmv2YVy", 
-                     "integration@parametricdining.com", 
-                     'nate@parametricdining.com', 
-                     'ERROR: Instant Patron Integration', "An error occured during instant patron integration: " + tb,                      'please open this in an HTML compatable email client')
+    # gmail.sendGmail("tech@parametricdining.com", 
+    #                 "fkTUfbmv2YVy", 
+    #                 "integration@parametricdining.com", 
+    #                 'nate@parametricdining.com', 
+    #                 'ERROR: Instant Patron Integration', "An error occured during instant patron integration: " + tb,                      'please open this in an HTML compatable email client')
+    MailGun.sendEmail("mail@bypassmobile.com", "nate@parametricdining.com", "ERROR: Instant Patron Integration", "An error occured during instant patron integration: " + tb)
 
 
