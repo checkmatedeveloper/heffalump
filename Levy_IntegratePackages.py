@@ -106,15 +106,15 @@ def integrate(dbCore):
 
                     print str(insert_uuid) + " " + str(packageUid) + " " + str(menuItemUid) + " " + str(qty)
 
-                    IntegrationTools.confirmInsert(dbCore, venueUid, insert_uuid, 'menus', 'menu_packages_x_items', 'package_uid', packageUid, False, None, True, False)
-                    IntegrationTools.confirmInsert(dbCore, venueUid, insert_uuid, 'menus', 'menu_packages_x_items', 'menu_item_uid', menuItemUid, False, None, True, False)
-                    IntegrationTools.confirmInsert(dbCore, venueUid, insert_uuid, 'menus', 'menu_packages_x_items', 'qty', qty, False, None, True, False)
-                    IntegrationTools.confirmInsert(dbCore, venueUid, insert_uuid, 'menus', 'menu_packages_x_items', 'qty_per', 'item', False, None, True, False)
+                    IntegrationTools.confirmInsert(dbCore, venueUid, insert_uuid, 'menus', 'menu_packages_x_items', 'package_uid', packageUid, False, None, True, auto_apply = True)
+                    IntegrationTools.confirmInsert(dbCore, venueUid, insert_uuid, 'menus', 'menu_packages_x_items', 'menu_item_uid', menuItemUid, False, None, True, auto_apply = True)
+                    IntegrationTools.confirmInsert(dbCore, venueUid, insert_uuid, 'menus', 'menu_packages_x_items', 'qty', qty, False, None, True, auto_apply = True)
+                    IntegrationTools.confirmInsert(dbCore, venueUid, insert_uuid, 'menus', 'menu_packages_x_items', 'qty_per', 'item', False, None, True, auto_apply = True)
                 elif len(menuXPackageItems) == 1:
                     #update existing mapping
                     oldQty = menuXPackageItems[0][3]
                     if qty != float(oldQty):
-                        IntegrationTools.confirmUpdate(dbCore, venueUid, 'menus', 'menu_packages_x_items', 'qty', menuXPackageItems[0][0], oldQty, qty, False, None)
+                        IntegrationTools.confirmUpdate(dbCore, venueUid, 'menus', 'menu_packages_x_items', 'qty', menuXPackageItems[0][0], oldQty, qty, False, None, auto_apply = True)
                 else:
                     #uh oh
                     print str(packageUid) + " " + str(menItemUid) + ' too many menuXPackageItem mappings, this should be impossible'
@@ -131,7 +131,7 @@ def integrate(dbCore):
 
     packageItemsToRemove = dbCore.getItemsRemovedFromPackages()
     for packageItem in packageItemsToRemove:
-        IntegrationTools.confirmRemove(dbCore, 1, 'menus', 'menu_packages_x_items', 'id', packageItem[0])
+        IntegrationTools.confirmRemove(dbCore, 1, 'menus', 'menu_packages_x_items', 'id', packageItem[0], auto_apply = True)
     
     dbCore.deactivatePackageItems()
 

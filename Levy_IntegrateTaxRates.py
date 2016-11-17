@@ -36,7 +36,7 @@ def integrate(dbCore):
                 print "TAX RATE COMPARE ROUNDED: " + str(round(currentTaxRate, 6)) + " vs " + str(round((taxRate * 100),6))
                 if round(currentTaxRate, 6)  != round((taxRate * 100), 6): #compare the old to the new rates
                     print "NOT EQUAL!!!!"
-                    IntegrationTools.confirmUpdate(dbCore, venueUid, 'menus', 'menu_taxes', 'tax_rate', menuTaxUid, currentTaxRate, round((taxRate * 100), 6), False, None) 
+                    IntegrationTools.confirmUpdate(dbCore, venueUid, 'menus', 'menu_taxes', 'tax_rate', menuTaxUid, currentTaxRate, round((taxRate * 100), 6), False, None, auto_apply = True) 
             elif len(levyTaxRates) == 0:
                 
                 #no tax rate mapped yet, lets sort that out :)
@@ -64,7 +64,7 @@ def integrate(dbCore):
                 else:
                     print "problem inserting menu tax uid"
 
-                IntegrationTools.confirmInsert(dbCore, venueUid, insert_uuid,'menus', 'menu_taxes', 'tax_rate', round((taxRate * 100),6), False, taxGroupId, False, False), 
+                IntegrationTools.confirmInsert(dbCore, venueUid, insert_uuid,'menus', 'menu_taxes', 'tax_rate', round((taxRate * 100),6), False, taxGroupId, False, auto_apply = True)
             else:
                 print "Something has gone very, very wrong :(((("
 
