@@ -683,8 +683,9 @@ class Levy_Db:
     def removeRow(self, schema, table, field, uid):
         try:
             cursor = self.db.cursor()
-            query = "DELETE FROM " + schema + "." + table + " WHERE id = " + str(uid)
+            query = "DELETE FROM " + schema + "." + table + " WHERE " + field + " = " + str(uid)
             rowsAffected = cursor.execute(query)
+            print cursor._last_executed
             self.db.commit()
             self.addLogRow("Delete: SUCCESS")
             return True, None

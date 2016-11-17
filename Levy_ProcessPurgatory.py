@@ -86,9 +86,12 @@ class LevyIntegrationWorker():
             pointerField = action[0][5]
             uid = action[0][6]
 
+            print "REMOVING: " + str(pointerSchema) + " " + str(pointerTable) + " " + str(pointerField) + " " + str(uid)
+
             success, errorMessage = self.levyDB.removeRow(pointerSchema, pointerTable, pointerField, uid)
 
             if success:
+                print "removed" + str(uid)
                 self.removeCount += 1
                 self.levyDB.purgatoryRowApplied(action[0][0])
                 return True
