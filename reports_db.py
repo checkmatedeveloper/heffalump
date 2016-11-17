@@ -166,7 +166,7 @@ class ReportsDb:
                             batch.is_active = 1")    
 
         rows = self.dbc.fetchall();
- 
+        
         data = [];
         
         for row in rows:
@@ -176,7 +176,6 @@ class ReportsDb:
             r['venue_uid'] = row[2]
             r['range'] = frequency
             data.append(r)
-
 
         return data
 
@@ -327,8 +326,8 @@ class ReportsDb:
         yesterday =  datetime.date.today() - datetime.timedelta(days=1)
 
         r = {}
-        r['start'] = datetime.datetime( yesterday.year, yesterday.month, yesterday.day)
-        r['end'] = r['start'] - timedelta(7)
+        r['end'] = datetime.datetime( yesterday.year, yesterday.month, yesterday.day)
+        r['start'] = r['end'] - timedelta(7)
 
         return r
 

@@ -148,6 +148,7 @@ try:
     for venueUid in venueUids:
         print str(venueUid)
         closedEvents = dbCore.getClosedEvents(venueUid)
+        print str(closedEvents)
         for event in closedEvents:
             eventUid = event[0]
             if dbCore.TPGDisabled(eventUid):
@@ -182,8 +183,8 @@ try:
                 #PALAC special transfer
                 if venueUid == 315:
                     try:
-                        eventDate = dbCore.getEventDate()
-                        datestamp = now.strftime('%Y%m%d')
+                        eventDate = dbCore.getEventDate(eventUid)
+                        datestamp = eventDate.strftime('%Y%m%d')
 
                         palacUsersHeader, palacUsers = dbCore.getPALACUsers()
                         makeCSVFile('PALAC-MSTR-USERS', palacUsersHeader, palacUsers)

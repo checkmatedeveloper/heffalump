@@ -793,9 +793,9 @@ class Levy_Db:
 
     def addLogRow(self, action):
         cursor = self.db.cursor()
-        cursor.execute('INSERT INTO integrations.integration_actions \
-                        (action, created_at, updated_at) VALUES \
-                        (%s, NOW(), CURRENT_TIMESTAMP)',(action))
+        cursor.execute('''INSERT INTO integrations.integration_actions
+                        (action, created_at, updated_at) VALUES 
+                        (%s, NOW(), CURRENT_TIMESTAMP)''', (action))
 
         self.db.commit()
         return cursor.lastrowid

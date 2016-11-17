@@ -7,6 +7,8 @@ import traceback
 import paramiko
 
 try:
+    print "Exporting Avnet"
+        
     EXPORT_FILE_PATH = "/data/Avnet_Export/"
 
     conn = DbConnection().connection
