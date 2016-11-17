@@ -5,6 +5,7 @@ from db_connection import DbConnection
 from IntegrationEmailerDb import EmailerDb
 import datetime
 import gmail
+import MailGun
 import IntegrationTools
 
 
@@ -193,7 +194,8 @@ def sendEmail(allAppliedActions):
                 emailAddresses = emailerDb.getEmailAddresses(venueUid)
                 for address in emailAddresses:
                     address = address[0]
-                    gmail.sendGmail("tech@parametricdining.com", "fkTUfbmv2YVy", "integration@parametricdining.com", address, 'Integration Complete', emailBody, 'please open this in an HTML compatable email client') 
+                    #gmail.sendGmail("tech@parametricdining.com", "fkTUfbmv2YVy", "integration@parametricdining.com", address, 'Integration Complete', emailBody, 'please open this in an HTML compatable email client')
+                    MailGun.sendEmail("mail@bypassmobile.com", address, "Integration Complete", emailBody) 
             else:
                 print "Don't send email, nothing to tell the venue about"
         else:

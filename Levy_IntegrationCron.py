@@ -3,6 +3,7 @@ import os
 import time
 import traceback
 import gmail
+import MailGun
 
 import Levy_FillTempTables
 
@@ -37,8 +38,9 @@ dbCore = Levy_Db(conn, redisInstance)
 def sendErrorEmail(body):        
     recipients = ['nate@parametricdining.com', 'jonathan@parametric.com']
     for to in recipients:
-        gmail.sendGmail('tech@parametricdining.com', 'fkTUfbmv2YVy', 'tech@parametricdining.com', to, 'Daily Integration Crashed', 'Daily Integration Crashed: ' + body, 'enable html to read this')
- 
+        #gmail.sendGmail('tech@parametricdining.com', 'fkTUfbmv2YVy', 'tech@parametricdining.com', to, 'Daily Integration Crashed', 'Daily Integration Crashed: ' + body, 'enable html to read this')
+        MailGun.sendEmail('mail@bypassmobile.com', to, 'Daily Integration Crashed', 'Daily Integration Crashed: ' + body) 
+
 def findIntegrationFile(dumpDir, fileNameRoot):
     for f in os.listdir(dumpDir):
         if f.startswith(fileNameRoot):
@@ -243,6 +245,7 @@ print "All Venues Count: " + str(allVenuesCount)
 if allVenuesCount != 0:
     print "Sending Emails!!!"
     for to in recipients:
-        gmail.sendGmail("tech@parametricdining.com", "fkTUfbmv2YVy", "integration@parametricdining.com", to, 'Daily Integration Report', emailBody, 'You need to enable HTML emails to view this message')
+        #gmail.sendGmail("tech@parametricdining.com", "fkTUfbmv2YVy", "integration@parametricdining.com", to, 'Daily Integration Report', emailBody, 'You need to enable HTML emails to view this message')
+        MailGun.sendEmail("mail@bypassmobile.com", to, 'Daily Integration Report', emailBody)
 else:
     print "Nothing to notify Nate and Jonathan about, not sending email"

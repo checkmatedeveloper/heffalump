@@ -7,6 +7,7 @@ import pytz, datetime
 from dateutil.relativedelta import relativedelta
 import traceback
 import gmail
+import MailGun
 import csv
 
 ACTION_TYPE_INSERT = 0
@@ -789,23 +790,23 @@ try:
             toEmail = toEmail[0]
             print "Script crashed, sending an email to " + toEmail
             print traceback.format_exc()
-            gmail.sendGmail("tech@parametricdining.com",
-                            "fkTUfbmv2YVy",
-                            "aramark_integration@parametricdining.com",
-                            toEmail,
-                            "!CRASHED!: ARAMARK INTEGRATION",
-                            "<h3> Your script crashed: </h3>" + traceback.format_exc(),
-                            "enable html"
-                            ) 
-        
+            #gmail.sendGmail("tech@parametricdining.com",
+            #                "fkTUfbmv2YVy",
+            #                "aramark_integration@parametricdining.com",
+            #                toEmail,
+            #                "!CRASHED!: ARAMARK INTEGRATION",
+            #                "<h3> Your script crashed: </h3>" + traceback.format_exc(),
+            #                "enable html"
+            #                ) 
+            MailGun.sendEmail("mail@bypassmobile.com", toEmail, "!CRASHED!: ARAMARK INTEGRATION", "<h3> Your script crashed: </h3>" + traceback.format_exc())
 except:
     tb = traceback.format_exc()
-    gmail.sendGmail("tech@parametricdining.com", 
-                    "fkTUfbmv2YVy", 
-                    "aramark_integrations@parametricdining.com", 
-                    "nate@parametricdining.com", 
-                    "!CRASHED!: ARAMARK INTEGTRATION", 
-                    "<h3>Your script encountered an non-recoverable error: </h3>" + traceback.format_exc(), "enable html")
-
+    #gmail.sendGmail("tech@parametricdining.com", 
+    #                "fkTUfbmv2YVy", 
+    #                "aramark_integrations@parametricdining.com", 
+    #                "nate@parametricdining.com", 
+    #                "!CRASHED!: ARAMARK INTEGTRATION", 
+    #                "<h3>Your script encountered an non-recoverable error: </h3>" + traceback.format_exc(), "enable html")
+    MailGun.sendEmail("mail@bypassmobile.com", toEmail, "!CRASHED!: ARAMARK INTEGTRATION",  "<h3>Your script encountered an non-recoverable error: </h3>" + traceback.format_exc())
 
     

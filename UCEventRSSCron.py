@@ -5,7 +5,7 @@ import os
 import hashlib
 import traceback
 import gmail
-
+import MailGun
 
 from  UCRSSDB import UCRSSDB
 from Levy_DB import Levy_Db
@@ -202,4 +202,5 @@ else:
     for issue in issues:
         emailMessage += issue
 
-gmail.sendGmail("tech@parametricdining.com", "fkTUfbmv2YVy", "uc_rss_integration@parametricdining.com", "nate@checkmatetablet.com", "UC RSS integration summary", emailMessage, "html")
+#gmail.sendGmail("tech@parametricdining.com", "fkTUfbmv2YVy", "uc_rss_integration@parametricdining.com", "nate@checkmatetablet.com", "UC RSS integration summary", emailMessage, "html")
+MailGun.sendEmail("mail@bypassmobile.copm", "nate@checkmatetablet.com", "UC RSS integration summary", emailMessage)
