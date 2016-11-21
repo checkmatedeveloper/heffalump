@@ -33,15 +33,15 @@ def updateEvent(eventUid, newName, newSubtitle, newDescription, eventImageUrl):
     print "Updating: " + str(eventUid)
 
     if oldName != newName:
-        IntegrationTools.confirmUpdate(levy_db, VENUE_UID, 'setup', 'events_x_venues', 'event_name', eventXVenueUid, oldName, newName, False, None)
+        IntegrationTools.confirmUpdate(levy_db, VENUE_UID, 'setup', 'events_x_venues', 'event_name', eventXVenueUid, oldName, newName, False, None, auto_apply = True)
     if oldSubtitle != newSubtitle: 
-        IntegrationTools.confirmUpdate(levy_db, VENUE_UID, 'setup', 'events_x_venues', 'subtitle', eventXVenueUid, oldSubtitle, newSubtitle, False, None)
+        IntegrationTools.confirmUpdate(levy_db, VENUE_UID, 'setup', 'events_x_venues', 'subtitle', eventXVenueUid, oldSubtitle, newSubtitle, False, None, auto_apply = True)
     if oldDescription != newDescription:
-        IntegrationTools.confirmUpdate(levy_db, VENUE_UID, 'setup', 'events_x_venues', 'description', eventXVenueUid, oldDescription, newDescription, False, None)
+        IntegrationTools.confirmUpdate(levy_db, VENUE_UID, 'setup', 'events_x_venues', 'description', eventXVenueUid, oldDescription, newDescription, False, None, auto_apply = True)
     
     if needNewImage(eventUid, eventImageUrl):
         print "Inserting new image row into purgatory"
-        IntegrationTools.confirmImage(levy_db, VENUE_UID, 'media', 'images', 'events_x_venues', eventXVenueUid, eventImageUrl)
+        IntegrationTools.confirmImage(levy_db, VENUE_UID, 'media', 'images', 'events_x_venues', eventXVenueUid, eventImageUrl, auto_apply = True)
      
    
 

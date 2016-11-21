@@ -19,7 +19,7 @@ def updateVenuesXSuiteHolders(venue_uid, patron_uid, levy_pointer, dbCore):
     else:
         for venueXSuiteHolder in venuesXSuiteHolders:
             if venueXSuiteHolder[3] == 0:
-                IntegrationTools.confirmUpdate(dbCore, venue_uid, 'patrons', 'venues_x_suite_holders', 'is_active', venueXSuiteHolder[0], 0, 1)
+                IntegrationTools.confirmUpdate(dbCore, venue_uid, 'patrons', 'venues_x_suite_holders', 'is_active', venueXSuiteHolder[0], 0, 1, auto_apply = True)
 
 def updateUnitsXPatrons(venue_uid, unit_uid, patron_uid, levy_pointer, dbCore):
 
@@ -34,7 +34,7 @@ def updateUnitsXPatrons(venue_uid, unit_uid, patron_uid, levy_pointer, dbCore):
     else:
         for unitXPatron in unitsXPatrons:
             if unitXPatron[5] == 0:
-                IntegrationTools.confirmUpdate(dbCore, venue_uid, 'info', 'unit_x_patrons', 'is_active', unitXPatron[0], 0, 1)
+                IntegrationTools.confirmUpdate(dbCore, venue_uid, 'info', 'unit_x_patrons', 'is_active', unitXPatron[0], 0, 1, auto_apply = True)
 
 
 def integrate(dbCore):
@@ -122,10 +122,10 @@ def integrate(dbCore):
                 parametricPatron = dbCore.getParametricPatron(levyPatron[3]) # levyPatron[3] = the parametric patron_uid
                 parametricClonePatron = dbCore.getParametricClonePatron(parametricPatron[0])
                 if parametricPatron[4] != IntegrationTools.hashString(row[1]): #compare the hashes, since the actual name is encrypted
-                    IntegrationTools.confirmUpdate(dbCore, venue_uid, 'patrons', 'patrons', 'company_name', parametricPatron[0], parametricPatron[3], row[1], True)
-                    IntegrationTools.confirmUpdate(dbCore, venue_uid, 'patrons', 'patrons', 'company_name_hashed', parametricPatron[0], parametricPatron[4], IntegrationTools.hashString(row[1]), False)
+                    IntegrationTools.confirmUpdate(dbCore, venue_uid, 'patrons', 'patrons', 'company_name', parametricPatron[0], parametricPatron[3], row[1], True, auto_apply = True)
+                    IntegrationTools.confirmUpdate(dbCore, venue_uid, 'patrons', 'patrons', 'company_name_hashed', parametricPatron[0], parametricPatron[4], IntegrationTools.hashString(row[1]), False, auto_apply = True)
                     if parametricClonePatron is not None:
-                        IntegrationTools.confirmUpdate(dbCore, venue_uid, 'patrons', 'clone_patrons', 'company_name', parametricPatron[0], parametricClonePatron[3], row[1], False)
+                        IntegrationTools.confirmUpdate(dbCore, venue_uid, 'patrons', 'clone_patrons', 'company_name', parametricPatron[0], parametricClonePatron[3], row[1], False, auto_apply = True)
                 
                 customerSuites = dbCore.getCustomerSuites(row[0], row[2])
                 for suiteNumber in customerSuites:

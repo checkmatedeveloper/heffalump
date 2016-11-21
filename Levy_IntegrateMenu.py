@@ -30,23 +30,23 @@ def updateMenuItem(dbCore, menuItem, itemName, taxUid, minOrder, maxOrder, mainP
     print "TAX UPDATE ( " + str(uid) + " ):  current tax uid = " + str(menuTaxUid) + " new tax uid = " + str(taxUid)
     if(menuTaxUid != taxUid):
         print "      tax uid CHANGED"
-        IntegrationTools.confirmUpdate(dbCore, venueUid, 'menus', 'menu_items', 'menu_tax_uid', uid, menuTaxUid, taxUid, levy_temp_pointer=itemNumber) 
+        IntegrationTools.confirmUpdate(dbCore, venueUid, 'menus', 'menu_items', 'menu_tax_uid', uid, menuTaxUid, taxUid, levy_temp_pointer=itemNumber, auto_apply = True) 
 
     if(name != itemName):
-        IntegrationTools.confirmUpdate(dbCore, venueUid, 'menus', 'menu_items', 'name', uid, name, itemName, levy_temp_pointer=itemNumber)
+        IntegrationTools.confirmUpdate(dbCore, venueUid, 'menus', 'menu_items', 'name', uid, name, itemName, levy_temp_pointer=itemNumber, auto_apply = True)
 
     if(displayName != itemName):
-        IntegrationTools.confirmUpdate(dbCore, venueUid, 'menus', 'menu_items', 'display_name', uid, displayName, itemName, levy_temp_pointer=itemNumber)    
+        IntegrationTools.confirmUpdate(dbCore, venueUid, 'menus', 'menu_items', 'display_name', uid, displayName, itemName, levy_temp_pointer=itemNumber, auto_apply = True)    
 
     if(minQty != minOrder):
-        IntegrationTools.confirmUpdate(dbCore, venueUid, 'menus', 'menu_items', 'minimum_qty', uid, minQty, minOrder, levy_temp_pointer = itemNumber)
+        IntegrationTools.confirmUpdate(dbCore, venueUid, 'menus', 'menu_items', 'minimum_qty', uid, minQty, minOrder, levy_temp_pointer = itemNumber, auto_apply = True)
     if(maxQty != maxOrder):
-        IntegrationTools.confirmUpdate(dbCore, venueUid, 'menus', 'menu_items', 'maximum_qty', uid, maxQty, maxOrder, levy_temp_pointer = itemNumber)
+        IntegrationTools.confirmUpdate(dbCore, venueUid, 'menus', 'menu_items', 'maximum_qty', uid, maxQty, maxOrder, levy_temp_pointer = itemNumber, auto_apply = True)
 
 
     print "Service Charge Update: " + str(serviceChargeRate) + " vs " + str(newServiceChargeRate * 100)
     if  float(serviceChargeRate) != (newServiceChargeRate * 100):
-        IntegrationTools.confirmUpdate(dbCore, venueUid, 'menus', 'menu_items', 'service_charge_rate', uid, serviceChargeRate, newServiceChargeRate * 100, levy_temp_pointer = itemNumber)
+        IntegrationTools.confirmUpdate(dbCore, venueUid, 'menus', 'menu_items', 'service_charge_rate', uid, serviceChargeRate, newServiceChargeRate * 100, levy_temp_pointer = itemNumber, auto_apply = True)
 
     
 
@@ -66,7 +66,7 @@ def updateMenuItem(dbCore, menuItem, itemName, taxUid, minOrder, maxOrder, mainP
             newPrice = doePrice
 
         if float(price) != float(newPrice):
-            IntegrationTools.confirmUpdate(dbCore, venueUid, 'menus', 'menu_x_menu_items', 'price', mxmID, price,  newPrice, levy_temp_pointer = itemNumber)
+            IntegrationTools.confirmUpdate(dbCore, venueUid, 'menus', 'menu_x_menu_items', 'price', mxmID, price,  newPrice, levy_temp_pointer = itemNumber, auto_apply = True)
     
     for menuType in ALL_MENUS:
         if menuType not in inMenu:
@@ -225,14 +225,14 @@ def integrate(dbCore):
             menuItemUid = menuXMenuItem[1]
             print "Deactivating " + str(mxmUid)
             
-            IntegrationTools.confirmDeactivate(dbCore, venue_uid, 'menus', 'menu_x_menu_items', mxmUid)
+            IntegrationTools.confirmDeactivate(dbCore, venue_uid, 'menus', 'menu_x_menu_items', mxmUid, auto_apply = True)
             menuItemLevyUid = dbCore.getMenuItemLevyUid(venue_uid, menuItemUid)
-            IntegrationTools.confirmDeactivate(dbCore, venue_uid, 'integrations', 'menu_items_levy', menuItemLevyUid)
+            IntegrationTools.confirmDeactivate(dbCore, venue_uid, 'integrations', 'menu_items_levy', menuItemLevyUid, auto_apply = True)
 
             #also remove the par items
-            IntegrationTools.confirmRemove(dbCore, venue_uid, 'info', 'par_menu_items', 'menu_item_uid', menuItemUid)
+            IntegrationTools.confirmRemove(dbCore, venue_uid, 'info', 'par_menu_items', 'menu_x_menu_item_uid', mxmUid, auto_apply = True)
 
-            IntegrationTools.confirmRemove(dbCore, venue_uid, 'info', 'unit_patron_par_items', 'menu_item_uid', menuItemUid)
+            IntegrationTools.confirmRemove(dbCore, venue_uid, 'info', 'unit_patron_par_items', 'menu_x_menu_item_uid', mxmUid, auto_apply = True)
 
     return success, errorLogRows, errorVenues;
 

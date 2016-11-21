@@ -44,7 +44,7 @@ def confirmInsert(levyDB,
         insertValue = new_value
 
     #print venue_uid   
-    purgatoryRowUid = levyDB.addPurgatoryRow(venue_uid, import_uuid, pointer_schema, pointer_table, pointer_field, None, None, insertValue, 'add', levy_temp_pointer, ignoreUniqueConstraint, auto_apply) 
+    purgatoryRowUid = levyDB.addPurgatoryRow(venue_uid, import_uuid, pointer_schema, pointer_table, pointer_field, None, None, insertValue, 'add', levy_temp_pointer, ignoreUniqueConstraint, auto_apply = auto_apply) 
 
     
     
@@ -61,7 +61,8 @@ def confirmUpdate(levyDB,
                   old_value,
                   new_value, 
                   encrypt=False,  #true if the new value should be encrypted before being passed on to the db layer
-                  levy_temp_pointer=None): 
+                  levy_temp_pointer=None,
+                  auto_apply = False): 
    
 #    print locals()
  
@@ -94,7 +95,7 @@ def confirmUpdate(levyDB,
     else:
         insertValue = new_value
 
-    purgatoryRowUid = levyDB.addPurgatoryRow(venue_uid, None, pointer_schema, pointer_table, pointer_field, pointer_uid, old_value, insertValue, 'edit', levy_temp_pointer)
+    purgatoryRowUid = levyDB.addPurgatoryRow(venue_uid, None, pointer_schema, pointer_table, pointer_field, pointer_uid, old_value, insertValue, 'edit', levy_temp_pointer, auto_apply = auto_apply)
     
     #add the crypto keys to th db
     #no don't were using an existing key
@@ -106,9 +107,10 @@ def confirmRemove(levyDB,
                   pointer_schema,
                   pointer_table,
                   pointer_field,
-                  pointer_uid):
+                  pointer_uid,
+                  auto_apply = False):
 
-    levyDB.addPurgatoryRow(venueUid, None, pointer_schema, pointer_table, pointer_field, pointer_uid, None, None, 'remove', None)
+    levyDB.addPurgatoryRow(venueUid, None, pointer_schema, pointer_table, pointer_field, pointer_uid, None, None, 'remove', None, auto_apply = auto_apply)
 
 
 def confirmImage(levyDB,
@@ -117,8 +119,9 @@ def confirmImage(levyDB,
                  pointer_table,
                  pointer_field,
                  pointer_uid,
-                 image_url):
-    purgatoryRowUid = levyDB.addPurgatoryRow(venue_uid, None, pointer_schema, pointer_table, pointer_field, pointer_uid, None, image_url, 'image', None)
+                 image_url,
+                 auto_apply = False):
+    purgatoryRowUid = levyDB.addPurgatoryRow(venue_uid, None, pointer_schema, pointer_table, pointer_field, pointer_uid, None, image_url, 'image', None, auto_apply = auto_apply)
 
 
 def confirmDeactivate(levyDB,
@@ -136,9 +139,10 @@ def confrimReActivate(levyDB,
                       venue_uid,
                       pointer_schema,
                       pointer_table,
-                      pointer_uid):
+                      pointer_uid,
+                      auto_apply = False):
 
-    purgatoryRowUid = levyDB.addPurgatoryRow(venue_uid, None, pointer_schema, pointer_table, 'is_active', pointer_uid, 0, 1, 'reactivate', None)
+    purgatoryRowUid = levyDB.addPurgatoryRow(venue_uid, None, pointer_schema, pointer_table, 'is_active', pointer_uid, 0, 1, 'reactivate', None, auto_apply = auto_apply)
 
 
 

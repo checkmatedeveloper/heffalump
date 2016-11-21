@@ -53,7 +53,7 @@ def integrate(dbCore):
                 if levyUnits[0][3] != None: #if there is no matching parametric unit_uid this s a suite that we should skip messing with
                     unit = dbCore.getUnit(levyUnits[0][3])
                     if unit[3] != row[1]: #if the names are not the same
-                        IntegrationTools.confirmUpdate(dbCore, venue_uid, 'setup', 'units', 'name', unit[0], unit[3], row[1], False)
+                        IntegrationTools.confirmUpdate(dbCore, venue_uid, 'setup', 'units', 'name', unit[0], unit[3], row[1], False, auto_apply = True)
             else:
                 #uh oh
                 dbCore.addLogRow("Multiple Rows in units_levy.  I don't know what to do!!!")
