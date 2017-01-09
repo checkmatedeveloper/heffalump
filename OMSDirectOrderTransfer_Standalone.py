@@ -15,6 +15,59 @@ import MailGun
 
 EXPORT_FILE_PATH = "/data/integration_files/OMS_DIRECT_EXPORTS/"
 
+def transferPALAC():
+    eventDate = dbCore.getEventDate(eventUid)
+    datestamp = eventDate.strftime('%Y%m%d')
+
+    palacUsersHeader, palacUsers = dbCore.getPALACUsers()
+    makeCSVFile('PALAC-MSTR-USERS', palacUsersHeader, palacUsers)
+
+    palacRoleAssocHeader, palacRoleAssoc = dbCore.getPALACRoleAssoc()
+    makeCSVFile('PALAC-MSTR-ROLEASSOC', palacRoleAssocHeader, palacRoleAssoc)
+
+    creditUsageHeader, creditUsage = dbCore.getPALACCreditUsage(eventUid)
+    creditUsageFileName = 'CREDITUSAGE_' + entityCode + "_" + levyEventNumber
+    makeCSVFile(creditUsageFileName, creditUsageHeader, creditUsage)
+    
+    palacPatronHeader, palacPatrons = dbCore.getPALACPatrons()
+    makeCSVFile('PALAC-MSTR-CUSTOMERS', palacPatronHeader, palacPatrons)
+
+    palacUnitsHeader, palacUnits = dbCore.getPALACUnits()
+    makeCSVFile('PALAC-MSTR-SUITES', palacUnitsHeader, palacUnits)
+
+    palacItemsHeader, palacItems = dbCore.getPALACItems()
+    makeCSVFile('PALAC-MSTR-ITEMS', palacItemsHeader, palacItems)
+
+    host = 'files.palacenet.com'
+    port = 22
+    username = 'bypasssms-ftp' 
+    password = 'Fush3foo8Xe2eil@eelu'
+
+    transport = paramiko.Transport((host, port))
+    transport.connect(username=username, password=password)
+
+    sftp = paramiko.SFTPClient.from_transport(transport)
+    
+    sftp.put(EXPORT_FILE_PATH + 'PALAC-MSTR-USERS.csv', 'MSTR-USERS_%s.csv' % (datestamp))
+    sftp.put(EXPORT_FILE_PATH + 'PALAC-MSTR-ROLEASSOC.csv', 'MSTR-ROLEASSOC_%s.csv' % (datestamp))
+    sftp.put(EXPORT_FILE_PATH + 'MSTR-ROLES.csv', 'MSTR-ROLES_%s.csv' % (datestamp))
+    sftp.put(EXPORT_FILE_PATH + orderHeaderFileName + '.csv', orderHeaderFileName + '_%s.csv' % (datestamp))
+    sftp.put(EXPORT_FILE_PATH + orderDetailsFileName + '.csv', orderDetailsFileName + '_%s.csv' % (datestamp))
+    sftp.put(EXPORT_FILE_PATH + orderPaymentsFileName + '.csv', orderPaymentsFileName + '_%s.csv' % (datestamp))
+    sftp.put(EXPORT_FILE_PATH + creditUsageFileName + '.csv', creditUsageFileName + '_%s.csv' % (datestamp))
+    sftp.put(EXPORT_FILE_PATH + 'MSTR-PAYMENTTYPES' + '.csv', 'MSTR-PAYMENTTYPES' + '_%s.csv' % (datestamp))
+    sftp.put(EXPORT_FILE_PATH + 'PALAC-MSTR-CUSTOMERS' + '.csv', 'MSTR-CUSTOMERS' + '_%s.csv' % (datestamp))
+    sftp.put(EXPORT_FILE_PATH + 'PALAC-MSTR-SUITES' + '.csv', 'MSTR-SUITES' + '_%s.csv' % (datestamp))
+    sftp.put(EXPORT_FILE_PATH + 'PALAC-MSTR-ITEMS' + '.csv', 'MSTR-ITEMS' + '_%s.csv' % (datestamp))
+
+
+    sftp.close()
+    
+    transport.close()
+
+    HipChat.sendMessage("PALAC Export Completed!!!", "OrderTransfers", HipChat.INTEGRATIONS_ROOM, HipChat.COLOR_GREEN)
+
+
 def convertUTCToLocalTime(utcDate, timezoneString):
     return utcDate.replace(tzinfo=pytz.utc).astimezone(timezone(timezoneString))
 
@@ -183,59 +236,14 @@ try:
                 #PALAC special transfer
                 if venueUid == 315:
                     try:
-                        eventDate = dbCore.getEventDate(eventUid)
-                        datestamp = eventDate.strftime('%Y%m%d')
 
-                        palacUsersHeader, palacUsers = dbCore.getPALACUsers()
-                        makeCSVFile('PALAC-MSTR-USERS', palacUsersHeader, palacUsers)
-
-                        palacRoleAssocHeader, palacRoleAssoc = dbCore.getPALACRoleAssoc()
-                        makeCSVFile('PALAC-MSTR-ROLEASSOC', palacRoleAssocHeader, palacRoleAssoc)
-
-                        creditUsageHeader, creditUsage = dbCore.getPALACCreditUsage(eventUid)
-                        creditUsageFileName = 'CREDITUSAGE_' + entityCode + "_" + levyEventNumber
-                        makeCSVFile(creditUsageFileName, creditUsageHeader, creditUsage)
-                        
-                        palacPatronHeader, palacPatrons = dbCore.getPALACPatrons()
-                        makeCSVFile('PALAC-MSTR-CUSTOMERS', palacPatronHeader, palacPatrons)
-
-                        palacUnitsHeader, palacUnits = dbCore.getPALACUnits()
-                        makeCSVFile('PALAC-MSTR-SUITES', palacUnitsHeader, palacUnits)
-
-                        palacItemsHeader, palacItems = dbCore.getPALACItems()
-                        makeCSVFile('PALAC-MSTR-ITEMS', palacItemsHeader, palacItems)
-
-                        host = 'files.palacenet.com'
-                        port = 22
-                        username = 'bypasssms-ftp' 
-                        password = 'Fush3foo8Xe2eil@eelu'
-
-                        transport = paramiko.Transport((host, port))
-                        transport.connect(username=username, password=password)
-        
-                        sftp = paramiko.SFTPClient.from_transport(transport)
-                        
-                        sftp.put(EXPORT_FILE_PATH + 'PALAC-MSTR-USERS.csv', 'MSTR-USERS_%s.csv' % (datestamp))
-                        sftp.put(EXPORT_FILE_PATH + 'PALAC-MSTR-ROLEASSOC.csv', 'MSTR-ROLEASSOC_%s.csv' % (datestamp))
-                        sftp.put(EXPORT_FILE_PATH + 'MSTR-ROLES.csv', 'MSTR-ROLES_%s.csv' % (datestamp))
-                        sftp.put(EXPORT_FILE_PATH + orderHeaderFileName + '.csv', orderHeaderFileName + '_%s.csv' % (datestamp))
-                        sftp.put(EXPORT_FILE_PATH + orderDetailsFileName + '.csv', orderDetailsFileName + '_%s.csv' % (datestamp))
-                        sftp.put(EXPORT_FILE_PATH + orderPaymentsFileName + '.csv', orderPaymentsFileName + '_%s.csv' % (datestamp))
-                        sftp.put(EXPORT_FILE_PATH + creditUsageFileName + '.csv', creditUsageFileName + '_%s.csv' % (datestamp))
-                        sftp.put(EXPORT_FILE_PATH + 'MSTR-PAYMENTTYPES' + '.csv', 'MSTR-PAYMENTTYPES' + '_%s.csv' % (datestamp))
-                        sftp.put(EXPORT_FILE_PATH + 'PALAC-MSTR-CUSTOMERS' + '.csv', 'MSTR-CUSTOMERS' + '_%s.csv' % (datestamp))
-                        sftp.put(EXPORT_FILE_PATH + 'PALAC-MSTR-SUITES' + '.csv', 'MSTR-SUITES' + '_%s.csv' % (datestamp))
-                        sftp.put(EXPORT_FILE_PATH + 'PALAC-MSTR-ITEMS' + '.csv', 'MSTR-ITEMS' + '_%s.csv' % (datestamp))
-                    
-
-                        sftp.close()
-                        
-                        transport.close()
-
-                        HipChat.sendMessage("PALAC Export Completed!!!", "OrderTransfers", HipChat.INTEGRATIONS_ROOM, HipChat.COLOR_GREEN)
-                    except:
-                        tb = traceback.format_exc()
-                        HipChat.sendMessage("Issue transfering PALAC files: " + str(tb), "OrderTransfers", HipChat.INTEGRATIONS_ROOM, HipChat.COLOR_RED)
+                        transferPALAC()
+                   except:
+                        try:
+                            transferPALAC()
+                        except:
+                            tb = traceback.format_exc()
+                            HipChat.sendMessage("Issue transfering PALAC files: " + str(tb), "OrderTransfers", HipChat.INTEGRATIONS_ROOM, HipChat.COLOR_RED)
 
                 sendSuccessfulTransferEmail(eventUid, venueUid, dbCore)    
             else:
@@ -245,4 +253,5 @@ except Exception as e:
     tb = traceback.format_exc()
     HipChat.sendMessage("@nate @jonathan_removethis OMS Direct Integration Script CRASHED " + str(tb), "OrderTransfers", HipChat.INTEGRATIONS_ROOM, HipChat.COLOR_RED)
                 
+
 
